@@ -1,0 +1,7 @@
+node_modules/
+dist/
+data.json
+events.sqlite
+events.sqlite-wal
+events.sqlite-shm
+.DS_Store

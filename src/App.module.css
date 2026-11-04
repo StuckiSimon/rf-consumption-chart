@@ -136,7 +136,7 @@
 .editName input:focus { box-shadow: 0 1px #e40134; }
 .editScore { width: 100%; min-width: 0; padding: 8px 5px; border: 1px solid #3a4556; border-radius: 8px; background: #111722; color: #f1eee5; text-align: center; font: 500 20px "DM Mono", monospace; font-variant-numeric: tabular-nums; }
 .editScore:focus { outline: 2px solid #e40134; outline-offset: 1px; }
-.stepButton { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #514922; border-radius: 11px; background: #292719; color: #f5d45b; font-size: 22px; cursor: pointer; touch-action: manipulation; }
+.stepButton { display: grid; place-items: center; width: 44px; height: 44px; border: 1px solid #514922; border-radius: 11px; background: #292719; color: #f5d45b; font-size: 22px; padding: 0; cursor: pointer; touch-action: manipulation; }
 .stepButton:active, .addTeam:active { transform: scale(.96); }
 .stepButton:disabled { opacity: .35; cursor: default; }
 .incrementFive { font-size: 15px; font-weight: 600; }
@@ -214,7 +214,7 @@
 .presentationTopbar .fullscreenButton { font-size: 15px; padding: 11px 16px; }
 .presentationShell { width: 100%; max-width: 2300px; padding: clamp(18px, 2.5vh, 32px) clamp(28px, 5vw, 100px) 16px; }
 .presentationShell .intro { align-items: center; padding-bottom: clamp(16px, 2vh, 24px); }
-.presentationShell h1 { font-size: clamp(44px, 4.2vw, 72px); letter-spacing: -.065em; }
+.presentationShell h1 { font-size: clamp(44px, 3.8vw, 72px); letter-spacing: -.065em; }
 .presentationShell .eyebrow { font-size: 14px; margin-bottom: 8px; }
 .presentationShell .scoreSection { padding-top: 14px; }
 .presentationShell .sectionHeading { margin-bottom: 10px; }

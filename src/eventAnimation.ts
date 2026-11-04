@@ -5,7 +5,7 @@ export function eventAnimation(
   random = Math.random,
 ): string {
   if (event.type !== "team-milestone")
-    return event.leaderIds.length ? "happy-idle" : "idle";
+    return event.leaderIds.length ? "waving" : "idle";
   const tier = ((event.milestone - 50) % 200) + 50;
   const choices =
     tier === 50

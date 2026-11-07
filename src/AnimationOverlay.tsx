@@ -159,6 +159,7 @@ export function AnimationOverlay({ embedded = false, initialAnimation = "drunk-i
         disposeAsset(asset);
       }
       renderer?.dispose();
+      renderer?.forceContextLoss();
       renderer?.domElement.remove();
     };
   }, [embedded, initialAnimation, fullBody]);

@@ -26,13 +26,10 @@ test("explains the rolling window instead of describing it as the overall total"
   expect(messages).toContain("Resets");
 });
 
-test("explains tied leadership and respects whether a scoring start is configured", () => {
+test("explains accumulated leadership time and tied leadership", () => {
   const messages = mickyMessages("leaders", scoreboard).join(" ");
+  expect(messages).toContain("wie lang jedi Gruppe insgesamt uf Platz 1 gsi isch");
   expect(messages).toContain("gliichziitig Ziit");
-  expect(messages).toContain("ganz gspeichereti Ziit");
-  const started = mickyMessages("leaders", { ...scoreboard, scoringStartedAt: scoreboard.updatedAt }).join(" ");
-  expect(started).toContain("erst ab em igstellte Start");
-  expect(started).not.toContain("ganz gspeichereti Ziit");
 });
 
 test("reacts to updates but not initialization or unrelated team edits", () => {
@@ -44,15 +41,29 @@ test("reacts to updates but not initialization or unrelated team edits", () => {
   expect(mickyReaction(scoreboard, reset)).toContain("wieder uf null");
 });
 
+test("varies score increase reactions and names only the teams whose counts increased", () => {
+  const updated = { ...scoreboard, teams: scoreboard.teams.map((team) => ({
+    ...team, drinks: team.drinks + (team.id === "a" ? 1 : -1),
+  })) };
+  const first = mickyReaction(scoreboard, updated, null, () => 0);
+  const middle = mickyReaction(scoreboard, updated, null, () => 0.5);
+  const last = mickyReaction(scoreboard, updated, null, () => 0.999);
+  expect(first).toBe("Alpha: Notiert! Min Taschenrechner het kei Pause.");
+  expect(middle).toStartWith("Alpha: ");
+  expect(last).toStartWith("Alpha: ");
+  expect(new Set([first, middle, last]).size).toBe(3);
+});
+
 test("prioritizes milestones and leadership events over generic score updates", () => {
   const base = { sourceEventId: 1, occurredAt: scoreboard.updatedAt };
-  expect(mickyReaction(scoreboard, scoreboard, {
+  const updated = { ...scoreboard, teams: scoreboard.teams.map((team) => ({ ...team, drinks: team.drinks + 1 })) };
+  expect(mickyReaction(scoreboard, updated, {
     ...base, type: "team-milestone", teamId: "a", milestone: 100,
-  })).toContain("Alpha het 100 Shots erreicht");
-  expect(mickyReaction(scoreboard, scoreboard, {
+  })).toContain("Alpha hend 100 Shots erreicht");
+  expect(mickyReaction(scoreboard, updated, {
     ...base, type: "leaders-changed", previousLeaderIds: ["a"], leaderIds: ["b"],
-  })).toContain("Beta übernimmt d Spitze");
-  expect(mickyReaction(scoreboard, scoreboard, {
+  })).toContain("Beta übernehmet d Spitze");
+  expect(mickyReaction(scoreboard, updated, {
     ...base, type: "leaders-changed", previousLeaderIds: ["a"], leaderIds: ["a", "b"],
-  })).toContain("Alpha und Beta");
+  })).toContain("Jetzt teiled sich Alpha und Beta de Platz 1");
 });

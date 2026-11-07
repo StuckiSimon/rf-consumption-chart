@@ -720,9 +720,8 @@ function LogoArtwork({ markup }: { markup: string }) {
   );
 }
 
-function DisplayTransition({ onReveal, onComplete }: { onReveal: () => void; onComplete: () => void }) {
+export function DisplayTransition({ onReveal, onComplete }: { onReveal: () => void; onComplete: () => void }) {
   const [markup, setMarkup] = useState("");
-  const [started, setStarted] = useState(false);
   const [fading, setFading] = useState(false);
 
   useEffect(() => {
@@ -737,21 +736,19 @@ function DisplayTransition({ onReveal, onComplete }: { onReveal: () => void; onC
         if (controller.signal.aborted) return;
         console.error("Could not load the transition logo.", error);
       }
-      if (!controller.signal.aborted) setStarted(true);
     };
     void load();
     return () => controller.abort();
   }, []);
 
   useEffect(() => {
-    if (!started) return;
     const timers = [
       setTimeout(onReveal, 1050),
       setTimeout(() => setFading(true), 1250),
       setTimeout(onComplete, 1650),
     ];
     return () => timers.forEach(clearTimeout);
-  }, [started, onReveal, onComplete]);
+  }, [onReveal, onComplete]);
 
   return (
     <motion.div

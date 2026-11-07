@@ -48,14 +48,16 @@ export function useIdleDisplay({
   }, [connected, mode, transition, switchTo]);
 
   useEffect(() => {
-    if (!scoreboard || !connected || busy || transition) return;
+    if (mode === "scoreboard" || transition) return;
+    const timer = setTimeout(() => switchTo("scoreboard"), idleDisplayDelay(mode));
+    return () => clearTimeout(timer);
+  }, [mode, transition, switchTo]);
+
+  useEffect(() => {
+    if (mode !== "scoreboard" || !scoreboard || !connected || busy || transition) return;
     const controller = new AbortController();
     const version = activity.current;
     const timer = setTimeout(() => {
-      if (mode !== "scoreboard") {
-        switchTo("scoreboard");
-        return;
-      }
       void fetch("/api/statistics", { signal: controller.signal })
         .then(async (response) => {
           if (!response.ok) throw new Error(`Statistics request failed: ${response.status}`);
